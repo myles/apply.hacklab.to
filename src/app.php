@@ -1,0 +1,15 @@
+<?php
+
+use Silex\Provider\UrlGeneratorServiceProvider;
+use Silex\Provider\TwigServiceProvider;
+use Silex\Provider\FormServiceProvider;
+use Silex\Provider\ValidatorServiceProvider;
+use Silex\Provider\TranslationServiceProvider;
+
+$app->register(new UrlGeneratorServiceProvider());
+$app->register(new TwigServiceProvider(), [
+    'twig.path' => __DIR__.'/../views',
+]);
+$app->register(new ValidatorServiceProvider());
+$app->register(new FormServiceProvider());
+$app->register(new TranslationServiceProvider());
