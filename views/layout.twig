@@ -1,15 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Apply for Hacklab.TO Membership!</title>
-    <link rel="stylesheet" type="text/css" href="{{ app.request.basepath }}/assets/main.css">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Apply for Hacklab.TO Membership!</title>
+
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="{{ app.request.basepath }}/assets/main.css">
+
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
 </head>
 <body>
+  <div class="container">
+    <div class="header">
+      <nav>
+        <ul class="nav nav-pills pull-right">
+          <li role="presentation" class="active"><a href="{{ path('home') }}">Home</a></li>
+          <li role="presentation"><a href="https://hacklab.to/contact/">Bug/Problem?</a></li>
+        </ul>
+        </nav>
+      <h3 class="text-muted">Membership Application</h3>
+    </div>
+
     {% block content %}
     {% endblock %}
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="{{ app.request.basepath }}/js/jquery-1.11.2.min.js"><\/script>')</script>
-    <script src="{{ app.request.basepath }}/assets/js/main.js"></script>
+    <footer class="footer">
+     <p>&copy; <a href="https://hacklab.to">Hacklab.TO</a> {{ "now"|date("Y") }}</p>
+    </footer>
+
+  </div> <!-- /container -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+  <script src="{{ app.request.basepath }}/assets/js/main.js"></script>
 </body>
 </html>

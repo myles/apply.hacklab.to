@@ -1,8 +1,13 @@
 <?php
 
-$app->get('/{name}', function ($name) use ($app) {
-    return $app['twig']->render('index.twig', array(
-        'name' => $name,
-    ));
+use Symfony\Component\HttpFoundation\Request;
+
+$app->get('/', function () use ($app) {
+  return $app['twig']->render('index.twig');
 })
-->value('name', 'world');
+->bind('home');
+
+$app->get('/apply', function () use ($app) {
+  return $app['twig']->render('apply.twig');
+})
+->bind('apply');

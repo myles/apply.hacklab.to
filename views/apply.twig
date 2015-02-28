@@ -1,0 +1,42 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+  <div class="row marketing">
+    <div class="col-md-12">
+      <form>
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" class="form-control input-lg" id="name" placeholder="Name or alias" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input type="email" class="form-control" id="email" placeholder="foobar@example.com" required>
+        </div>
+        <div class="form-group">
+          <label for="bio">Why do you want to join Hacklab?</label>
+          <textarea class="form-control" id="bio" placeholder="Enter a few sentences about yourself and why you want to join Hacklab.TO" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="face">Bio Picture (Upload)</label>
+          <input type="file" id="face">
+        </div>
+        <div class="form-group">
+          <label for="face2">Bio Picture (URL)</label>
+          <input type="url" class="form-control" id="face2" placeholder="http://www.example.com/my-face.jpg">
+        </div>
+        <div class="form-group">
+          <p class="bg-info hl-info-box">Although providing a photo of yourself is not required, it's strongly recommended!</p>
+        </div>
+        <div class="form-group">
+          <label for="member">Which member referred you?</label>
+          <input type="text" class="form-control input-lg" id="member" placeholder="John Smith" required>
+        </div>
+        <div class="form-group">
+          <label for="hear">How'd you hear about us?</label>
+          <textarea class="form-control" id="hear" placeholder="Some random person down just the street"></textarea>
+        </div>
+        <button type="submit" class="btn btn-lg btn-block btn-primary">Submit Application</button>
+      </form>
+    </div>
+  </div>  
+{% endblock %}

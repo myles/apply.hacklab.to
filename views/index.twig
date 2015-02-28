@@ -1,5 +1,12 @@
 {% extends 'layout.twig' %}
 
 {% block content %}
-	Hello {{ name }}!
+  <div class="jumbotron">
+    <img src="/assets/img/logo.png" alt="Logo" width="200px">
+
+    <h1>Become a member!</h1>
+    <p class="lead">
+      So you got a tour of the lab and an existing member is willing to nominate you? Fantastic! Click the button below to get started.</p>
+    <p><a class="btn btn-lg btn-success" href="{{ path('apply') }}" role="button">Memberize Me!</a></p>
+  </div>
 {% endblock %}
