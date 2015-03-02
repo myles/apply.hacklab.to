@@ -9,17 +9,20 @@ $(function(){
     });
   }
 
-  var previewFace = function() {
-    var input = this;
-    if (input.checkValidity()) {
-      checkImageLoad(input.value, function() {
-        $('.js-face-image').attr('src', input.value);
-      }, function() {
-        $('.js-face-image').attr('src', '/assets/img/broken.png');
-      });
-    } else {
-      $('.js-face-image').attr('src', '/assets/img/faceless.png');
-    }
+  var previewFace = function(e) {
+    var input = e.target;
+    // paste event fires before val is populated.
+    setTimeout(function () {
+      if (input.checkValidity()) {
+        checkImageLoad(input.value, function() {
+          $('.js-face-image').attr('src', input.value);
+        }, function() {
+          $('.js-face-image').attr('src', '/assets/img/broken.png');
+        });
+      } else {
+        $('.js-face-image').attr('src', '/assets/img/faceless.png');
+      }
+    }, 100);
   };
 
   $('.js-face-url')
