@@ -7,6 +7,8 @@
         "symfony/config": "~2.6",
         "symfony/translation": "~2.6",
         "symfony/security-csrf": "~2.6",
-        "twig/twig": "~1.18"
+        "twig/twig": "~1.18",
+        "symfony/yaml": "~2.6",
+        "doctrine/dbal": "~2.5"
     }
 }

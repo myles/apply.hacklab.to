@@ -8,6 +8,8 @@ if (php_sapi_name() === 'cli-server' && is_file($filename)) {
 
 require_once __DIR__.'/../vendor/autoload.php';
 $app = new Silex\Application();
+$app['env'] = 'dev';
+
 $app['debug'] = true;
 
 require __DIR__.'/../src/app.php';
