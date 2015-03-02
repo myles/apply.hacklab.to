@@ -1,11 +1,65 @@
 {% extends 'layout.twig' %}
-{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
 
 {% block content %}
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="alert alert-warning" role="alert">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Info:</span>
+        Fields marked with an asterisk are required
+      </div>
+    </div>
+  </div>
+
   {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
     <div class="row">
-      <div class="col-md-12">
-        {{ form_widget(form) }}
+      <div class="col-sm-6">
+        {{ form_row(form.name) }}
+        {{ form_row(form.nick) }}
+      </div>
+      <div class="col-sm-6">
+        {{ form_row(form.contactEmail, {'attr': {'class': 'js-contact-email'}}) }}
+        {{ form_row(form.listEmail, {'attr': {'class': 'js-list-email'}}) }}
+      </div>
+    </div>
+    {{ form_row(form.bio) }}
+    <div class="row">
+      <div class="col-sm-6">
+        {{ form_row(form.member) }}
+      </div>
+      <div class="col-sm-6">
+        {{ form_row(form.member2) }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="alert alert-info js-suggest-face" role="alert">
+          <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+          <span class="sr-only">Info:</span>
+          Although providing a photo of yourself is not required, it's strongly recommended!
+        </div>
+        {{ form_row(form.faceUrl, {'attr': {'class': 'js-face-url'}}) }}
+        {{ form_row(form.faceFile, {'attr': {'class': 'js-face-file'}}) }}
+      </div>
+      <div class="col-sm-4">
+        <img class="img-rounded img-responsive js-face-image" src="/assets/img/faceless.png">
+      </div>
+    </div>
+    <div class="page-header">
+      <h3>Optional Info</h3>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        {{ form_row(form.twitter) }}
+      </div>
+      <div class="col-sm-6">
+        {{ form_row(form.facebook) }}
+      </div>
+    </div>
+    {{ form_row(form.hear) }}
+    <div class="row">
+      <div class="col-sm-12">
         <button type="submit" class="btn btn-lg btn-block btn-success">Submit Application</button>
       </div>
     </div>

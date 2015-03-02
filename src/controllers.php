@@ -12,37 +12,52 @@ $app->get('/', function () use ($app) {
 $app->match('/apply', function (Request $request) use ($app) {
   $form = $app['form.factory']->createBuilder('form')
     ->add('name', 'text', [
-      'label' => 'Name',
-      'attr' => [ 'placeholder' => 'Name or alias' ],
+      'label' => 'Real Name *',
+      'attr' => [ 'placeholder' => 'John Smith' ],
       'constraints' => [ new Assert\NotBlank() ],
     ])
-    ->add('email', 'email', [
-      'label' => 'Email address',
+    ->add('nick', 'text', [
+      'label' => 'Nickname *',
+      'attr' => [ 'placeholder' => 'jsmithy' ],
+      'constraints' => [ new Assert\NotBlank() ],
+    ])
+    ->add('contactEmail', 'email', [
+      'label' => 'Contact Email address *',
       'attr' => [ 'placeholder' => 'foobar@example.com' ],
       'constraints' => [ new Assert\NotBlank(), new Assert\Email() ],
     ])
+    ->add('listEmail', 'email', [
+      'label' => 'Mailing List Email address *',
+      'attr' => [ 'placeholder' => 'foobar+hacklab@example.com' ],
+      'constraints' => [ new Assert\NotBlank(), new Assert\Email() ],
+    ])
     ->add('bio', 'textarea', [
-      'label' => 'Why do you want to join Hacklab?',
+      'label' => 'Why do you want to join Hacklab? *',
       'attr' => [ 'placeholder' => 'Enter a few sentences about yourself and why you want to join Hacklab.TO' ],
       'constraints' => [ new Assert\NotBlank() ],
     ])
-    ->add('face-url', 'url', [
+    ->add('faceUrl', 'url', [
       'label' => 'Bio Picture (URL)',
       'attr' => [ 'placeholder' => 'http://www.example.com/my-face.jpg' ],
       'constraints' => [],
     ])
-    ->add('face-file', 'file', [
+    ->add('faceFile', 'file', [
       'label' => 'Bio Picture (Upload)',
       'constraints' => [],
     ])
     ->add('member', 'text', [
-      'label' => 'Which member referred you?',
+      'label' => 'Name of sponsoring member *',
       'attr' => [ 'placeholder' => 'Ada Lovelace' ],
+      'constraints' => [ new Assert\NotBlank() ],
+    ])
+    ->add('member2', 'text', [
+      'label' => 'Seconding member? *',
+      'attr' => [ 'placeholder' => 'Alan Turing' ],
       'constraints' => [ new Assert\NotBlank() ],
     ])
     ->add('twitter', 'text', [
       'label' => 'Twitter',
-      'attr' => [ 'placeholder' => 'username' ],
+      'attr' => [ 'placeholder' => '@username' ],
       'constraints' => [],
     ])
     ->add('facebook', 'url', [
@@ -62,9 +77,11 @@ $app->match('/apply', function (Request $request) use ($app) {
   if ($form->isValid()) {
     $data = $form->getData();
 
-    // do something with the data
 
-    // redirect somewhere
+
+    // This would be replaced with a primary key in a DB one day.
+    $app['session']->set('formData', $data);;
+
     return $app->redirect('payment');
   }
 
