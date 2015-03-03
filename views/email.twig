@@ -6,7 +6,7 @@ Full application details below:
 
 Name:     {{name}}
 Nickname: {{nickname}}
-Profile:  {% if profile_hash %}{{url('profile', profile_hash)}}{% else %}None provided.{% endif %}
+Profile:  {% if profile_hash %}{{url('profile', {hash: profile_hash})}}{% else %}None provided.{% endif %}
 Email:    {{contact_email}}
 
 Sponsors: {{sponsor}}, {{second_sponsor}}
