@@ -159,7 +159,7 @@ $app->match('/apply', function (Request $request) use ($app) {
     if (!mail(
       implode(', ', $app['config']['emails']) ,
       "{$data['name']} ({$data['nickname']}) has applied!",
-      wordwrap($app['twig']->render('email.twig', $data), 70, "\r\n"),
+      $app['twig']->render('email.twig', $data),
       $headers
     )) {
       throw new Exception("Error Sending Email", 1);
