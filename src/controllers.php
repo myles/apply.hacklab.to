@@ -104,6 +104,11 @@ $app->match('/apply', function (Request $request) use ($app) {
       'attr' => [ 'placeholder' => 'http://www.facebook.com/your.name' ],
       'constraints' => [],
     ])
+    ->add('website', 'url', [
+      'label' => 'Your Website',
+      'attr' => [ 'placeholder' => 'http://www.example.com/' ],
+      'constraints' => [],
+    ])
     ->add('heard_from', 'textarea', [
       'label' => 'How\'d you hear about us?',
       'attr' => [ 'placeholder' => 'Some bloke just down the street' ],
@@ -134,9 +139,10 @@ $app->match('/apply', function (Request $request) use ($app) {
       $app['db']->executeUpdate(
         'INSERT INTO applicants (
           name, nickname, contact_email, list_email, bio_reason, sponsor,
-          second_sponsor, picture, twitter, facebook, heard_from, profile_hash
+          second_sponsor, picture, twitter, facebook, heard_from, profile_hash,
+          website
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         [
           $data['name'],
           $data['nickname'],
@@ -150,6 +156,7 @@ $app->match('/apply', function (Request $request) use ($app) {
           $data['facebook'],
           $data['heard_from'],
           $data['profile_hash'],
+          $data['website'],
         ]
       );
     } catch (Doctrine\DBAL\Exception\UniqueConstraintViolationException $exception) {
