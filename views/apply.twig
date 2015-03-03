@@ -16,20 +16,20 @@
     <div class="row">
       <div class="col-sm-6">
         {{ form_row(form.name) }}
-        {{ form_row(form.nick) }}
+        {{ form_row(form.nickname) }}
       </div>
       <div class="col-sm-6">
-        {{ form_row(form.contactEmail, {'attr': {'class': 'js-contact-email'}}) }}
-        {{ form_row(form.listEmail, {'attr': {'class': 'js-list-email'}}) }}
+        {{ form_row(form.contact_email, {'attr': {'class': 'js-contact-email'}}) }}
+        {{ form_row(form.list_email, {'attr': {'class': 'js-list-email'}}) }}
       </div>
     </div>
-    {{ form_row(form.bio) }}
+    {{ form_row(form.bio_reason) }}
     <div class="row">
       <div class="col-sm-6">
-        {{ form_row(form.member) }}
+        {{ form_row(form.sponsor) }}
       </div>
       <div class="col-sm-6">
-        {{ form_row(form.member2) }}
+        {{ form_row(form.second_sponsor) }}
       </div>
     </div>
     <div class="row">
@@ -39,8 +39,8 @@
           <span class="sr-only">Info:</span>
           Although providing a photo of yourself is not required, it's strongly recommended!
         </div>
-        {{ form_row(form.faceUrl, {'attr': {'class': 'js-face-url'}}) }}
-        {{ form_row(form.faceFile, {'attr': {'class': 'js-face-file'}}) }}
+        {{ form_row(form.face_url, {'attr': {'class': 'js-face-url'}}) }}
+        {{ form_row(form.face_file, {'attr': {'class': 'js-face-file'}}) }}
       </div>
       <div class="col-sm-4">
         <img class="img-rounded img-responsive js-face-image" src="/assets/img/faceless.png">
@@ -51,13 +51,13 @@
     </div>
     <div class="row">
       <div class="col-sm-6">
-        {{ form_row(form.twitter) }}
+        {{ form_row(form.twitter, {'attr': {'class': 'js-twitter'}}) }}
       </div>
       <div class="col-sm-6">
         {{ form_row(form.facebook) }}
       </div>
     </div>
-    {{ form_row(form.hear) }}
+    {{ form_row(form.heard_from) }}
     <div class="row">
       <div class="col-sm-12">
         <button type="submit" class="btn btn-lg btn-block btn-success">Submit Application</button>

@@ -43,6 +43,11 @@ $(function(){
     disableCopying = (e.target.value !== '');
   })
 
+  $('.js-twitter').on('change', function(e) {
+    if (e.target.value[0] !== '@') {
+      e.target.value = '@' + e.target.value
+    }
+  })
 
   $('.js-face-file').change(function() {
     var input = this;
@@ -58,4 +63,7 @@ $(function(){
     }
   });
 
+  $('#passwordModal').on('shown.bs.modal', function() {
+    $('#formPassword').focus();
+  });
 });

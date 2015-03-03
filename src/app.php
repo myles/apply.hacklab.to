@@ -10,12 +10,15 @@ $config = Yaml::parse(file_get_contents(
   $locator->locate('config.' . $app['env'] . '.yml', null, false)[0]
 ));
 
+$app['config'] = $config;
+
 use Silex\Provider\UrlGeneratorServiceProvider;
 use Silex\Provider\TwigServiceProvider;
 use Silex\Provider\FormServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
 use Silex\Provider\TranslationServiceProvider;
 use Silex\Provider\SessionServiceProvider;
+// use Silex\Provider\SecurityServiceProvider;
 
 $app->register(new UrlGeneratorServiceProvider());
 $app->register(new TwigServiceProvider(), [
@@ -23,7 +26,24 @@ $app->register(new TwigServiceProvider(), [
 ]);
 $app->register(new ValidatorServiceProvider());
 $app->register(new FormServiceProvider([
-  'form.secret' => $config['formSecret']
+  'form.secret' => $app['config']['formSecret']
 ]));
 $app->register(new TranslationServiceProvider());
-$app->register(new SessionServiceProvider());
+$app->register(new SessionServiceProvider([
+  'cookie_secure' => (boolean) $app['config']['enforceHttps'],
+  'cookie_httponly' => true,
+]));
+// $app->register(new SecurityServiceProvider());
+$app->register(new Silex\Provider\DoctrineServiceProvider(), array(
+    'db.options' => array(
+        'driver'   => $app['config']['database']['driver'],
+        'dbname' => $app['config']['database']['dbname'],
+        'user' => $app['config']['database']['user'],
+        'password' => $app['config']['database']['password'],
+        'host' => $app['config']['database']['host'],
+    ),
+));
+
+if ($app['config']['enforceHttps']) {
+  $app['controllers']->requireHttps();
+}

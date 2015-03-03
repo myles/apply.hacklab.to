@@ -1,12 +1,44 @@
 <?php
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Validator\Constraints as Assert;
+
+$app['security.firewalls'] = [
+  'unsecured' => [
+    'anonymous' => true,
+    'pattern' => '^/admin',
+  ],
+  'admin' => [
+    'pattern' => '^/admin',
+    'http' => true,
+    'users' => [
+      'admin' => ['ROLE_ADMIN', $app['config']['adminPassword']],
+    ],
+  ],
+];
+$app['security.access_rules'] = [
+  ['^/admin', 'ROLE_ADMIN'],
+  ['^.*$', 'ROLE_USER'],
+];
+
+$sharedAuthentication = function (Request $request, Silex\Application $app) {
+  if ($app['session']->get('isSharedAuthenticated') !== true) {
+    return new RedirectResponse('/');
+  }
+};
 
 $app->get('/', function () use ($app) {
   return $app['twig']->render('index.twig');
 })
 ->bind('home');
+
+$app->post('/', function (Request $request) use ($app) {
+  if ($request->get('password') === $app['config']['sharedPassword']) {
+    $app['session']->set('isSharedAuthenticated', true);
+  }
+  return $app->redirect('/apply');
+});
 
 // match will accept GET or POST requests
 $app->match('/apply', function (Request $request) use ($app) {
@@ -16,41 +48,41 @@ $app->match('/apply', function (Request $request) use ($app) {
       'attr' => [ 'placeholder' => 'John Smith' ],
       'constraints' => [ new Assert\NotBlank() ],
     ])
-    ->add('nick', 'text', [
+    ->add('nickname', 'text', [
       'label' => 'Nickname *',
       'attr' => [ 'placeholder' => 'jsmithy' ],
       'constraints' => [ new Assert\NotBlank() ],
     ])
-    ->add('contactEmail', 'email', [
+    ->add('contact_email', 'email', [
       'label' => 'Contact Email address *',
       'attr' => [ 'placeholder' => 'foobar@example.com' ],
       'constraints' => [ new Assert\NotBlank(), new Assert\Email() ],
     ])
-    ->add('listEmail', 'email', [
+    ->add('list_email', 'email', [
       'label' => 'Mailing List Email address *',
       'attr' => [ 'placeholder' => 'foobar+hacklab@example.com' ],
       'constraints' => [ new Assert\NotBlank(), new Assert\Email() ],
     ])
-    ->add('bio', 'textarea', [
+    ->add('bio_reason', 'textarea', [
       'label' => 'Why do you want to join Hacklab? *',
       'attr' => [ 'placeholder' => 'Enter a few sentences about yourself and why you want to join Hacklab.TO' ],
       'constraints' => [ new Assert\NotBlank() ],
     ])
-    ->add('faceUrl', 'url', [
+    ->add('face_url', 'url', [
       'label' => 'Bio Picture (URL)',
       'attr' => [ 'placeholder' => 'http://www.example.com/my-face.jpg' ],
       'constraints' => [],
     ])
-    ->add('faceFile', 'file', [
+    ->add('face_file', 'file', [
       'label' => 'Bio Picture (Upload)',
       'constraints' => [],
     ])
-    ->add('member', 'text', [
+    ->add('sponsor', 'text', [
       'label' => 'Name of sponsoring member *',
       'attr' => [ 'placeholder' => 'Ada Lovelace' ],
       'constraints' => [ new Assert\NotBlank() ],
     ])
-    ->add('member2', 'text', [
+    ->add('second_sponsor', 'text', [
       'label' => 'Seconding member? *',
       'attr' => [ 'placeholder' => 'Alan Turing' ],
       'constraints' => [ new Assert\NotBlank() ],
@@ -65,7 +97,7 @@ $app->match('/apply', function (Request $request) use ($app) {
       'attr' => [ 'placeholder' => 'http://www.facebook.com/your.name' ],
       'constraints' => [],
     ])
-    ->add('hear', 'textarea', [
+    ->add('heard_from', 'textarea', [
       'label' => 'How\'d you hear about us?',
       'attr' => [ 'placeholder' => 'Some bloke just down the street' ],
       'constraints' => [],
@@ -76,12 +108,52 @@ $app->match('/apply', function (Request $request) use ($app) {
 
   if ($form->isValid()) {
     $data = $form->getData();
+    $data['profile_hash'] = sha1($data['nickname']);
 
+    if ($data['face_file'] && $data['face_file']->isValid()) {
+      $extension = $data['face_file']->guessExtension();
+      if (is_null($extension)) {
+        $extension = $data['face_file']->getExtension();
+      }
+      $data['picture'] = $data['nickname'] . '.' . $extension;
+      $data['face_file']->move(
+        __DIR__ . '/../profiles/',
+        $data['picture']
+      );
+    }
 
+    $app['db']->executeUpdate(
+      'INSERT INTO applicants (
+        name, nickname, contact_email, list_email, bio_reason, sponsor,
+        second_sponsor, picture, twitter, facebook, heard_from, profile_hash
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [
+        $data['name'],
+        $data['nickname'],
+        $data['contact_email'],
+        $data['list_email'],
+        $data['bio_reason'],
+        $data['sponsor'],
+        $data['second_sponsor'],
+        $data['picture'],
+        $data['twitter'],
+        $data['facebook'],
+        $data['heard_from'],
+        $data['profile_hash'],
+      ]
+    );
 
-    // This would be replaced with a primary key in a DB one day.
-    $app['session']->set('formData', $data);;
+    if (!mail(
+      implode(', ', $app['config']['emails']) ,
+      "{$data['name']} ({$data['nickname']}) has applied!",
+      $app['twig']->render('email.twig', $data);
+    )) {
+      throw new Exception("Error Sending Email", 1);
+    }
 
+    // Reset for the next user
+    $app['session']->set('isSharedAuthenticated', false);
     return $app->redirect('payment');
   }
 
@@ -89,9 +161,29 @@ $app->match('/apply', function (Request $request) use ($app) {
     'form' => $form->createView()
   ]);
 })
+->method('GET|POST')
+->before($sharedAuthentication)
 ->bind('apply');
 
 $app->get('/payment', function () use ($app) {
   return $app['twig']->render('payment.twig');
 })
 ->bind('payment');
+
+$app->get('/profile/{hash}', function ($hash) use ($app) {
+  $user = $app['db']->fetchAssoc(
+    'SELECT * FROM applicants WHERE profile_hash = ?',
+    [ strtolower($hash) ]
+  );
+  if (!$user) {
+    $app->abort(404);
+  }
+
+  $filePath = __DIR__ . '/../profiles/' . $user['picture'];
+  if (!file_exists($filePath)) {
+    $app->abort(404);
+  }
+  return $app->sendFile($filePath);
+})
+->assert('hash', '[A-Fa-z0-9]{40}')
+->bind('profile');

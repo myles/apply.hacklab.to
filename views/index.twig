@@ -7,6 +7,23 @@
     <h1>Become a member!</h1>
     <p class="lead">
       So you got a tour of the lab and an existing member is willing to nominate you? Fantastic! Click the button below to get started.</p>
-    <p><a class="btn btn-lg btn-success" href="{{ path('apply') }}" role="button">Memberize Me!</a></p>
+    <p><button class="btn btn-lg btn-success" data-toggle="modal" data-target="#passwordModal">Memberize Me!</button></p>
+  </div>
+
+  <div class="modal fade" id="passwordModal" tabindex="-1" role="dialog" aria-labelledby="passwordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <form method="post">
+            <div class="input-group input-group-lg">
+              <input class="form-control" type="password" name="password" id="formPassword" placeholder="Enter the password to apply">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="submit">Submit</button>
+              </span>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 {% endblock %}

@@ -6,11 +6,13 @@ The simple webapp for applying to Hacklab.TO as a member
 
 1. PHP 5.4 or greater
 2. [Composer](https://getcomposer.org) for installing dependencies
+3. An SQL database of somesort (MySQL, SQLite)
 
 ## Installation ##
 
 1. `git clone` this repo
 2. Run `composer install` in the project root directory.
+3. Something something migrations, somehow.
 
 ## Running ##
 
@@ -31,7 +33,7 @@ Visit [http://localhost:8080/](http://localhost:8080/)
 - `src/`: Application source code
 - `views/`: Twig templates
 - `web/`: Webroot
-- `vendor/`: Well... The vendor code.
+- `config/`: environment-specific config and secrets
 
 ## License ##
 

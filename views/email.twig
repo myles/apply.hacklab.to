@@ -1,0 +1,31 @@
+Prospective hacklab member {{name}} ({{nickname}}) has applied!
+
+Full application details below:
+
+-----------------------
+
+Name:     {{name}}
+Nickname: {{nickname}}
+Profile:  {% if profile_hash %}{{url('profile', profile_hash)}}{% else %}None provided.{% endif %}
+Email:    {{contact_email}}
+
+Sponsors: {{sponsor}}, {{second_sponsor}}
+
+Social Media:
+{% if twitter %}
+- Twitter: {{twitter}}
+{% endif %}
+{% if facebook %}
+- Facebook: {{facebook}}
+{% endif %}
+
+Bio / Why they want to join:
+{{bio_reason}}
+
+How'd they hear about us:
+{{heard_from|default('None provided.')}}
+
+
+--------------
+
+This was an automated email sent by apply.hacklab.to
