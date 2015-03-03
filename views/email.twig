@@ -4,10 +4,10 @@ Full application details below:
 
 -----------------------
 
-Name:     {{name}}
+Name: {{name}}
 Nickname: {{nickname}}
-Profile:  {% if profile_hash %}{{url('profile', {hash: profile_hash})}}{% else %}None provided.{% endif %}
-Email:    {{contact_email}}
+Email: {{contact_email}}
+Profile: {% if profile_hash %}{{url('profile', {hash: profile_hash})}}{% else %}None provided.{% endif %}
 
 Sponsors: {{sponsor}}, {{second_sponsor}}
 
