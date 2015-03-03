@@ -52,7 +52,13 @@ $app->match('/apply', function (Request $request) use ($app) {
     ->add('nickname', 'text', [
       'label' => 'Nickname *',
       'attr' => [ 'placeholder' => 'jsmithy' ],
-      'constraints' => [ new Assert\NotBlank() ],
+      'constraints' => [
+        new Assert\NotBlank(),
+        new Assert\Regex([
+          'pattern' => '/^[a-z0-9]+$/',
+          'message' => 'Username can only be alphanumeric characters, all lower case.'
+        ])
+      ],
     ])
     ->add('contact_email', 'email', [
       'label' => 'Contact Email address *',
@@ -109,6 +115,7 @@ $app->match('/apply', function (Request $request) use ($app) {
 
   if ($form->isValid()) {
     $data = $form->getData();
+    $data['nickname'] = strtolower($data['nickname']);
     $data['profile_hash'] = sha1($data['nickname']);
 
     if ($data['face_file'] && $data['face_file']->isValid()) {
