@@ -2,6 +2,7 @@
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Validator\Constraints as Assert;
 
 $app['security.firewalls'] = [
@@ -122,32 +123,39 @@ $app->match('/apply', function (Request $request) use ($app) {
       );
     }
 
-    $app['db']->executeUpdate(
-      'INSERT INTO applicants (
-        name, nickname, contact_email, list_email, bio_reason, sponsor,
-        second_sponsor, picture, twitter, facebook, heard_from, profile_hash
-      )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [
-        $data['name'],
-        $data['nickname'],
-        $data['contact_email'],
-        $data['list_email'],
-        $data['bio_reason'],
-        $data['sponsor'],
-        $data['second_sponsor'],
-        $data['picture'],
-        $data['twitter'],
-        $data['facebook'],
-        $data['heard_from'],
-        $data['profile_hash'],
-      ]
-    );
+    try {
+      $app['db']->executeUpdate(
+        'INSERT INTO applicants (
+          name, nickname, contact_email, list_email, bio_reason, sponsor,
+          second_sponsor, picture, twitter, facebook, heard_from, profile_hash
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [
+          $data['name'],
+          $data['nickname'],
+          $data['contact_email'],
+          $data['list_email'],
+          $data['bio_reason'],
+          $data['sponsor'],
+          $data['second_sponsor'],
+          $data['picture'],
+          $data['twitter'],
+          $data['facebook'],
+          $data['heard_from'],
+          $data['profile_hash'],
+        ]
+      );
+    } catch (Doctrine\DBAL\Exception\UniqueConstraintViolationException $exception) {
+      $form->addError(new FormError('Nickname is already in use'));
+      return $app['twig']->render('apply.twig', [
+        'form' => $form->createView()
+      ]);
+    }
 
     if (!mail(
       implode(', ', $app['config']['emails']) ,
       "{$data['name']} ({$data['nickname']}) has applied!",
-      $app['twig']->render('email.twig', $data);
+      $app['twig']->render('email.twig', $data)
     )) {
       throw new Exception("Error Sending Email", 1);
     }
