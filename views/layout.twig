@@ -20,6 +20,9 @@
       <nav>
         <ul class="nav nav-pills pull-right">
           <li role="presentation" class="active"><a href="{{ path('home') }}">Home</a></li>
+          {% if app.session.get('isSharedAuthenticated') %}
+            <li role="presentation"><a href="{{ path('logout') }}">Logout</a></li>
+          {% endif %}
           <li role="presentation"><a href="https://hacklab.to/contact/">Bug/Problem?</a></li>
         </ul>
         </nav>

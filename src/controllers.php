@@ -181,7 +181,7 @@ $app->match('/apply', function (Request $request) use ($app) {
 
     // Reset for the next user
     $app['session']->set('isSharedAuthenticated', false);
-    return $app->redirect('payment');
+    return $app->redirect('/payment');
   }
 
   return $app['twig']->render('apply.twig', [
@@ -196,6 +196,12 @@ $app->get('/payment', function () use ($app) {
   return $app['twig']->render('payment.twig');
 })
 ->bind('payment');
+
+$app->get('/logout', function () use ($app) {
+  $app['session']->set('isSharedAuthenticated', false);
+  return $app->redirect('/');
+})
+->bind('logout');
 
 $app->get('/profile/{hash}', function ($hash) use ($app) {
   $user = $app['db']->fetchAssoc(
