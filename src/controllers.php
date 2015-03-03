@@ -152,10 +152,15 @@ $app->match('/apply', function (Request $request) use ($app) {
       ]);
     }
 
+    $headers = 'From: Applications <applications@hacklab.to>' . "\r\n" .
+      'Reply-To: applications@hacklab.to' . "\r\n" .
+      'X-Mailer: PHP/' . phpversion();
+
     if (!mail(
       implode(', ', $app['config']['emails']) ,
       "{$data['name']} ({$data['nickname']}) has applied!",
-      $app['twig']->render('email.twig', $data)
+      wordwrap($app['twig']->render('email.twig', $data), 70, "\r\n"),
+      $headers
     )) {
       throw new Exception("Error Sending Email", 1);
     }
