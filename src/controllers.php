@@ -85,14 +85,14 @@ $app->match('/apply', function (Request $request) use ($app) {
       'constraints' => [],
     ])
     ->add('sponsor', 'text', [
-      'label' => 'Name of sponsoring member *',
-      'attr' => [ 'placeholder' => 'Ada Lovelace' ],
-      'constraints' => [ new Assert\NotBlank() ],
+      'label' => 'Name of sponsoring member',
+      'attr' => [ 'placeholder' => 'None' ],
+      'constraints' => [ ],
     ])
     ->add('second_sponsor', 'text', [
-      'label' => 'Seconding member? *',
-      'attr' => [ 'placeholder' => 'Alan Turing' ],
-      'constraints' => [ new Assert\NotBlank() ],
+      'label' => 'Seconding member?',
+      'attr' => [ 'placeholder' => 'None' ],
+      'constraints' => [ ],
     ])
     ->add('twitter', 'text', [
       'label' => 'Twitter',
