@@ -49,8 +49,8 @@ $app->match('/apply', function (Request $request) use ($app) {
       'attr' => [ 'placeholder' => 'John Smith' ],
       'constraints' => [ new Assert\NotBlank() ],
     ])
-    ->add('nickname', 'text', [
-      'label' => 'Nickname *',
+    ->add('username', 'text', [
+      'label' => 'Username *',
       'attr' => [ 'placeholder' => 'jsmithy' ],
       'constraints' => [
         new Assert\NotBlank(),
@@ -58,6 +58,13 @@ $app->match('/apply', function (Request $request) use ($app) {
           'pattern' => '/^[a-z0-9]+$/',
           'message' => 'Username can only be alphanumeric characters, all lower case.'
         ])
+      ],
+    ])
+    ->add('nickname', 'text', [
+      'label' => 'Nickname (used for door announcements, etc.) *',
+      'attr' => [ 'placeholder' => 'John' ],
+      'constraints' => [
+        new Assert\NotBlank(),
       ],
     ])
     ->add('contact_email', 'email', [
@@ -126,15 +133,15 @@ $app->match('/apply', function (Request $request) use ($app) {
 
   if ($form->isValid()) {
     $data = $form->getData();
-    $data['nickname'] = strtolower($data['nickname']);
-    $data['profile_hash'] = sha1($data['nickname']);
+    $data['username'] = strtolower($data['username']);
+    $data['profile_hash'] = sha1($data['username']);
 
     if ($data['face_file'] && $data['face_file']->isValid()) {
       $extension = $data['face_file']->guessExtension();
       if (is_null($extension)) {
         $extension = $data['face_file']->getExtension();
       }
-      $data['picture'] = $data['nickname'] . '.' . $extension;
+      $data['picture'] = $data['username'] . '.' . $extension;
       $data['face_file']->move(
         __DIR__ . '/../profiles/',
         $data['picture']
@@ -144,13 +151,14 @@ $app->match('/apply', function (Request $request) use ($app) {
     try {
       $app['db']->executeUpdate(
         'INSERT INTO applicants (
-          name, nickname, contact_email, list_email, bio_reason, sponsor,
+          name, username, nickname, contact_email, list_email, bio_reason, sponsor,
           second_sponsor, picture, token_type, twitter, facebook, heard_from, profile_hash,
           website
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         [
           $data['name'],
+          $data['username'],
           $data['nickname'],
           $data['contact_email'],
           $data['list_email'],

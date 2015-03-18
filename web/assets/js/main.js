@@ -35,9 +35,19 @@ $(function(){
     }
   };
 
+  var duplicateUsername = function(e) {
+    if (!disableCopying) {
+      $('.js-nickname').val(e.target.value);
+    }
+  };
+
   $('.js-contact-email')
     .on('paste', duplicateText)
     .on('keyup', duplicateText);
+  
+  $('.js-username')
+    .on('paste', duplicateUsername)
+    .on('keyup', duplicateUsername);
 
   $('.js-list-email').on('change', function(e) {
     disableCopying = (e.target.value !== '');
