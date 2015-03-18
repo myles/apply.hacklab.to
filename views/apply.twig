@@ -21,7 +21,8 @@
     <div class="row">
       <div class="col-sm-6">
         {{ form_row(form.name) }}
-        {{ form_row(form.nickname) }}
+        {{ form_row(form.username, {'attr': {'class': 'js-username'}}) }}
+        {{ form_row(form.nickname, {'attr': {'class': 'js-nickname'}}) }}
       </div>
       <div class="col-sm-6">
         {{ form_row(form.contact_email, {'attr': {'class': 'js-contact-email'}}) }}
