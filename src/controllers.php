@@ -84,6 +84,12 @@ $app->match('/apply', function (Request $request) use ($app) {
       'label' => 'Bio Picture (Upload)',
       'constraints' => [],
     ])
+    ->add('token_type', 'choice', [
+      'label' => 'Preferred Access Token Type',
+      'expanded' => true,
+      'choices' => [ 'fob' => 'Key Fob', 'card' => 'Card' ],
+      'data' => 'fob'
+    ])
     ->add('sponsor', 'text', [
       'label' => 'Name of sponsoring member',
       'attr' => [ 'placeholder' => 'None' ],
@@ -139,10 +145,10 @@ $app->match('/apply', function (Request $request) use ($app) {
       $app['db']->executeUpdate(
         'INSERT INTO applicants (
           name, nickname, contact_email, list_email, bio_reason, sponsor,
-          second_sponsor, picture, twitter, facebook, heard_from, profile_hash,
+          second_sponsor, picture, token_type, twitter, facebook, heard_from, profile_hash,
           website
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         [
           $data['name'],
           $data['nickname'],
@@ -152,6 +158,7 @@ $app->match('/apply', function (Request $request) use ($app) {
           $data['sponsor'],
           $data['second_sponsor'],
           $data['picture'],
+          $data['token_type'],
           $data['twitter'],
           $data['facebook'],
           $data['heard_from'],
