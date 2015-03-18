@@ -46,12 +46,12 @@ $app->match('/apply', function (Request $request) use ($app) {
   $form = $app['form.factory']->createBuilder('form')
     ->add('name', 'text', [
       'label' => 'Real Name *',
-      'attr' => [ 'placeholder' => 'John Smith' ],
+      'attr' => [ 'placeholder' => 'Alex Smith' ],
       'constraints' => [ new Assert\NotBlank() ],
     ])
     ->add('username', 'text', [
       'label' => 'Username *',
-      'attr' => [ 'placeholder' => 'jsmithy' ],
+      'attr' => [ 'placeholder' => 'asmith' ],
       'constraints' => [
         new Assert\NotBlank(),
         new Assert\Regex([
@@ -62,7 +62,7 @@ $app->match('/apply', function (Request $request) use ($app) {
     ])
     ->add('nickname', 'text', [
       'label' => 'Nickname (used for door announcements, etc.) *',
-      'attr' => [ 'placeholder' => 'John' ],
+      'attr' => [ 'placeholder' => 'Alex' ],
       'constraints' => [
         new Assert\NotBlank(),
       ],
@@ -124,7 +124,7 @@ $app->match('/apply', function (Request $request) use ($app) {
     ])
     ->add('heard_from', 'textarea', [
       'label' => 'How\'d you hear about us?',
-      'attr' => [ 'placeholder' => 'Some bloke just down the street' ],
+      'attr' => [ 'placeholder' => 'Someone just down the street' ],
       'constraints' => [],
     ])
     ->getForm();
