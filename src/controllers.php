@@ -135,6 +135,7 @@ $app->match('/apply', function (Request $request) use ($app) {
     $data = $form->getData();
     $data['username'] = strtolower($data['username']);
     $data['profile_hash'] = sha1($data['username']);
+    $hasProfileImage = false;
 
     if ($data['face_file'] && $data['face_file']->isValid()) {
       $extension = $data['face_file']->guessExtension();
@@ -146,6 +147,20 @@ $app->match('/apply', function (Request $request) use ($app) {
         __DIR__ . '/../profiles/',
         $data['picture']
       );
+      $hasProfileImage = true;
+    }
+
+    if ($data['face_url']) {
+      $tmp_file = '/tmp/apply_' . uniqid();
+      if (copy($data['face_url'], $tmp_file)) {
+        if (exif_imagetype($tmp_file) == IMAGETYPE_GIF || exif_imagetype($tmp_file) == IMAGETYPE_JPEG || exif_imagetype($tmp_file) == IMAGETYPE_PNG || exif_imagetype($tmp_file) == IMAGETYPE_BMP) {
+          $info  = getimagesize($tmp_file);
+          rename($tmp_file, __DIR__ . '/../profiles/' . $data['username'] . '.' . image_type_to_extension($info[2]));
+        } else {
+          unlink($tmp_file);
+        }
+      }
+      $hasProfileImage = true;
     }
 
     try {
@@ -170,7 +185,7 @@ $app->match('/apply', function (Request $request) use ($app) {
           $data['twitter'],
           $data['facebook'],
           $data['heard_from'],
-          $data['profile_hash'],
+          ($hasProfileImage) ? $data['profile_hash'] : 'NULL',
           $data['website'],
         ]
       );
