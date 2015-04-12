@@ -3,7 +3,7 @@
 -- DO NOT change the changeset names!
 -- We WANT liquibase to complain about a checksum changing.
 
---changeset notifications:notifications
+--changeset applicants:applicants
 CREATE TABLE `applicants` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
