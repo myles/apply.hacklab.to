@@ -9,7 +9,7 @@ Nickname: {{nickname}}
 Email: {{contact_email}}
 Website: {% if website %}{{website}}{% else %}None provided.{% endif %}
 
-Photo: {% if direct_photo %}{{direct_photo}}{% else %}{% if profile_hash %}{{url('profile', {hash: profile_hash})}}{% else %}None provided.{% endif %}{% endif %}
+Photo: {% if face_url %}{{face_url}}{% else %}{% if profile_hash %}{{url('profile', {hash: profile_hash})}}{% else %}None provided.{% endif %}{% endif %}
 
 Sponsors: {{sponsor}}, {{second_sponsor}}
 
