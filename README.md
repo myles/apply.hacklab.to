@@ -15,7 +15,7 @@ The simple webapp for applying to Hacklab.TO as a member
 2. Run `composer install` in the project root directory.
 3. Copy `migrations/liquibase.properties.example` to `migrations/liquibase.properties`, editing to reflect your database
 4. Edit `config/config.dev.yml` to suit your needs
-5. Run `./migrations/liquibase update` to bootstrap your database.
+5. Run `cd migrations && ./liquibase update` to bootstrap your database.
 
 ## Running ##
 

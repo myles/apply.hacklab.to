@@ -134,7 +134,7 @@ $app->match('/apply', function (Request $request) use ($app) {
   if ($form->isValid()) {
     $data = $form->getData();
     $data['username'] = strtolower($data['username']);
-    $data['profile_hash'] = sha1($data['username']);
+    $data['profile_hash'] = null;
 
     if ($data['face_file'] && $data['face_file']->isValid()) {
       $extension = $data['face_file']->guessExtension();
@@ -146,6 +146,24 @@ $app->match('/apply', function (Request $request) use ($app) {
         __DIR__ . '/../profiles/',
         $data['picture']
       );
+      $data['profile_hash'] = sha1($data['username']);
+    }
+
+    if ($data['face_url']) {
+      $tmp_file = '/tmp/apply_' . uniqid();
+      if (copy($data['face_url'], $tmp_file)) {
+        if (exif_imagetype($tmp_file) == IMAGETYPE_GIF
+          || exif_imagetype($tmp_file) == IMAGETYPE_JPEG
+          || exif_imagetype($tmp_file) == IMAGETYPE_PNG
+          || exif_imagetype($tmp_file) == IMAGETYPE_BMP
+        ) {
+          $info  = getimagesize($tmp_file);
+          copy($tmp_file, __DIR__ . '/../profiles/' . $data['username'] . image_type_to_extension($info[2]));
+        } else {
+          unlink($tmp_file);
+        }
+      }
+      $data['profile_hash'] = sha1($data['username']);
     }
 
     try {

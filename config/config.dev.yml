@@ -5,8 +5,8 @@ enforceHttps: false
 emails:
   - notify@example.com
 database:
-  driver: pdo_mysql
-  dbname: applicants
+  driver: pdo_sqlite
+  path: migrations/applicants.sqlite
   user: root
   password:
   host: 127.0.0.1
