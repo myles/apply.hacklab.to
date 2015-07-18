@@ -153,9 +153,13 @@ $app->match('/apply', function (Request $request) use ($app) {
     if ($data['face_url']) {
       $tmp_file = '/tmp/apply_' . uniqid();
       if (copy($data['face_url'], $tmp_file)) {
-        if (exif_imagetype($tmp_file) == IMAGETYPE_GIF || exif_imagetype($tmp_file) == IMAGETYPE_JPEG || exif_imagetype($tmp_file) == IMAGETYPE_PNG || exif_imagetype($tmp_file) == IMAGETYPE_BMP) {
+        if (exif_imagetype($tmp_file) == IMAGETYPE_GIF
+          || exif_imagetype($tmp_file) == IMAGETYPE_JPEG
+          || exif_imagetype($tmp_file) == IMAGETYPE_PNG
+          || exif_imagetype($tmp_file) == IMAGETYPE_BMP
+        ) {
           $info  = getimagesize($tmp_file);
-          rename($tmp_file, __DIR__ . '/../profiles/' . $data['username'] . '.' . image_type_to_extension($info[2]));
+          copy($tmp_file, __DIR__ . '/../profiles/' . $data['username'] . image_type_to_extension($info[2]));
         } else {
           unlink($tmp_file);
         }

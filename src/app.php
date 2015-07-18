@@ -41,6 +41,7 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
         'user' => $app['config']['database']['user'],
         'password' => $app['config']['database']['password'],
         'host' => $app['config']['database']['host'],
+        'path' => __DIR__.'/../' . $app['config']['database']['path'],
     ),
 ));
 
