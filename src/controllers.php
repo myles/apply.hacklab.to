@@ -158,7 +158,11 @@ $app->match('/apply', function (Request $request) use ($app) {
           || exif_imagetype($tmp_file) == IMAGETYPE_BMP
         ) {
           $info  = getimagesize($tmp_file);
-          copy($tmp_file, __DIR__ . '/../profiles/' . $data['username'] . image_type_to_extension($info[2]));
+
+          // Contains a . prefixed in the stirng
+          $extension = image_type_to_extension($info[2]);
+          copy($tmp_file, __DIR__ . '/../profiles/' . $data['username'] . $extension);
+          $data['picture'] = $data['username'] . $extension;
         } else {
           unlink($tmp_file);
         }
