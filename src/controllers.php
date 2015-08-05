@@ -83,12 +83,14 @@ $app->match('/apply', function (Request $request) use ($app) {
       'constraints' => [ new Assert\NotBlank() ],
     ])
     ->add('face_url', 'url', [
-      'label' => 'Bio Picture (URL)',
+      'label' => 'Bio Picture (URL) *',
       'attr' => [ 'placeholder' => 'http://www.example.com/my-face.jpg' ],
-      'constraints' => [],
+      'constraints' => [ new Assert\Url([
+        'protocols' => ['http', 'https'],
+      ]) ],
     ])
     ->add('face_file', 'file', [
-      'label' => 'Bio Picture (Upload)',
+      'label' => 'Bio Picture (Upload) *',
       'constraints' => [],
     ])
     ->add('token_type', 'choice', [
@@ -115,12 +117,16 @@ $app->match('/apply', function (Request $request) use ($app) {
     ->add('facebook', 'url', [
       'label' => 'Facebook',
       'attr' => [ 'placeholder' => 'http://www.facebook.com/your.name' ],
-      'constraints' => [],
+      'constraints' => [ new Assert\Url([
+        'protocols' => ['http', 'https'],
+      ]) ],
     ])
     ->add('website', 'url', [
       'label' => 'Your Website',
       'attr' => [ 'placeholder' => 'http://www.example.com/' ],
-      'constraints' => [],
+      'constraints' => [ new Assert\Url([
+        'protocols' => ['http', 'https'],
+      ]) ],
     ])
     ->add('heard_from', 'textarea', [
       'label' => 'How\'d you hear about us?',
@@ -136,11 +142,30 @@ $app->match('/apply', function (Request $request) use ($app) {
     $data['username'] = strtolower($data['username']);
     $data['profile_hash'] = null;
 
+    if ($data['face_file'] === null && $data['face_url'] === null) {
+      $form->addError(new FormError('You must specify a photo URL or upload one yourself!'));
+      return $app['twig']->render('apply.twig', [
+        'form' => $form->createView()
+      ]);
+    }
+
     if ($data['face_file'] && $data['face_file']->isValid()) {
+      if (!(exif_imagetype($data['face_file']) == IMAGETYPE_GIF
+        || exif_imagetype($data['face_file']) == IMAGETYPE_JPEG
+        || exif_imagetype($data['face_file']) == IMAGETYPE_PNG
+        || exif_imagetype($data['face_file']) == IMAGETYPE_BMP
+      )) {
+        $form->get('face_file')->addError(new FormError('Invalid picture filetype (GIF, JPEG, PNG, BMP)'));
+        return $app['twig']->render('apply.twig', [
+          'form' => $form->createView()
+        ]);
+      }
+
       $extension = $data['face_file']->guessExtension();
       if (is_null($extension)) {
         $extension = $data['face_file']->getExtension();
       }
+
       $data['picture'] = $data['username'] . '.' . $extension;
       $data['face_file']->move(
         __DIR__ . '/../profiles/',
@@ -151,7 +176,7 @@ $app->match('/apply', function (Request $request) use ($app) {
 
     if ($data['face_url']) {
       $tmp_file = '/tmp/apply_' . uniqid();
-      if (copy($data['face_url'], $tmp_file)) {
+      if (@copy($data['face_url'], $tmp_file)) {
         if (exif_imagetype($tmp_file) == IMAGETYPE_GIF
           || exif_imagetype($tmp_file) == IMAGETYPE_JPEG
           || exif_imagetype($tmp_file) == IMAGETYPE_PNG
@@ -165,7 +190,16 @@ $app->match('/apply', function (Request $request) use ($app) {
           $data['picture'] = $data['username'] . $extension;
         } else {
           unlink($tmp_file);
+          $form->get('face_url')->addError(new FormError('Invalid picture filetype (GIF, JPEG, PNG, BMP)'));
+          return $app['twig']->render('apply.twig', [
+            'form' => $form->createView()
+          ]);
         }
+      } else {
+        $form->get('face_url')->addError(new FormError('Unable to retrieve remote photo from URL.'));
+        return $app['twig']->render('apply.twig', [
+          'form' => $form->createView()
+        ]);
       }
       $data['profile_hash'] = sha1($data['username']);
     }
