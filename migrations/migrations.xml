@@ -7,4 +7,10 @@
                 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <include file="bootstrap.sql"/>
+    
+    <changeSet id="1" author="myles">
+        <addColumn tableName="applicants">
+            <column name="preferred_gender_pronoun" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
