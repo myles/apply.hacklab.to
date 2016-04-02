@@ -3,10 +3,10 @@ sharedPassword: password
 adminPassword: password
 enforceHttps: false
 emails:
-  - me@mylesbraithwaite.com
+  - notify@example.com
 database:
-  driver: pdo_mysql
-  dbname: hacklab_to_apply
+  driver: pdo_sqlite
+  path: migrations/applicants.sqlite
   user: root
   password:
   host: 127.0.0.1
