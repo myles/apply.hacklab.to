@@ -19,7 +19,6 @@ CREATE TABLE `applicants` (
   `heard_from` TEXT,
   `profile_hash` char(40) DEFAULT NULL COMMENT 'For profile image lookup',
   `website` VARCHAR(255) DEFAULT NULL,
-  `preferred_gender_pronoun` VARCHAR(255) DEFAULT NULL,
   `token_type` VARCHAR(8) NOT NULL,
   `username` VARCHAR(255) NOT NULL,
   `completed` tinyint(1) DEFAULT '0',
