@@ -257,7 +257,7 @@ $app->match('/apply', function (Request $request) use ($app) {
     }
 
     if (!mail(
-      implode(', ', $data['contact_email']) ,
+      $data['contact_email'],
       "Hi {$data['name']}, you have applied to be a member of the HackLab.TO!",
       $app['twig']->render('email_potential_member.twig', $data),
       $headers
