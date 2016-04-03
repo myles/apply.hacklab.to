@@ -256,6 +256,15 @@ $app->match('/apply', function (Request $request) use ($app) {
       throw new Exception("Error Sending Email", 1);
     }
 
+    if (!mail(
+      implode(', ', $data['contact_email']) ,
+      "Hi {$data['name']}, you have applied to be a member of the HackLab.TO!",
+      $app['twig']->render('email_potential_member.twig', $data),
+      $headers
+    )) {
+      throw new Exception("Error Sending Email", 1);
+    }
+
     // Reset for the next user
     $app['session']->set('isSharedAuthenticated', false);
     return $app->redirect('/payment');
