@@ -128,6 +128,11 @@ $app->match('/apply', function (Request $request) use ($app) {
         'protocols' => ['http', 'https'],
       ]) ],
     ])
+    ->add('preferred_gender_pronoun', 'text', [
+      'label' => 'Preferred Gender Pronoun',
+      'attr' => [ 'placeholder' => '' ],
+      'constraints' => [],
+    ])
     ->add('heard_from', 'textarea', [
       'label' => 'How\'d you hear about us?',
       'attr' => [ 'placeholder' => 'Someone just down the street' ],
@@ -209,9 +214,9 @@ $app->match('/apply', function (Request $request) use ($app) {
         'INSERT INTO applicants (
           name, username, nickname, contact_email, list_email, bio_reason, sponsor,
           second_sponsor, picture, token_type, twitter, facebook, heard_from, profile_hash,
-          website
+          website, preferred_gender_pronoun
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         [
           $data['name'],
           $data['username'],
@@ -228,6 +233,7 @@ $app->match('/apply', function (Request $request) use ($app) {
           $data['heard_from'],
           $data['profile_hash'],
           $data['website'],
+          $data['preferred_gender_pronoun'],
         ]
       );
     } catch (Doctrine\DBAL\Exception\UniqueConstraintViolationException $exception) {
