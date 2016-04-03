@@ -1,6 +1,7 @@
 composer.phar
 vendor/
 config/*.prod.yml
+config/*.dev.yml
 profiles/*
 migrations/liquibase.properties
 .DS_Store
